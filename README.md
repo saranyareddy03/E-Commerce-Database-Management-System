@@ -120,6 +120,22 @@ SOURCE insert_data.sql;
 
 ---
 
+## Sample Query Outputs
+
+### 1. Customer Purchase History
+
+The following query displays the purchase history of customers, including products purchased, quantity, and total amount.
+
+![Customer Purchase History](screenshots/customer_purchase_history.png)
+
+---
+
+### 2. Best Selling Product
+
+The following query identifies the product with the highest number of sales.
+
+![Best Selling Product](screenshots/best_selling_product.png)
+
 ## Author
 
 **Nallimilli Saranya Reddy**
