@@ -16,6 +16,23 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `cart`
+--
+
+DROP TABLE IF EXISTS `cart`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cart` (
+  `cart_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `created_date` date DEFAULT (curdate()),
+  PRIMARY KEY (`cart_id`),
+  UNIQUE KEY `customer_id` (`customer_id`),
+  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `cart`
 --
 
@@ -24,6 +41,27 @@ LOCK TABLES `cart` WRITE;
 INSERT INTO `cart` VALUES (1,1,'2026-07-22'),(2,2,'2026-07-22'),(3,3,'2026-07-22'),(4,4,'2026-07-22'),(5,5,'2026-07-22'),(6,6,'2026-07-22'),(7,7,'2026-07-22'),(8,8,'2026-07-22'),(9,9,'2026-07-22'),(10,10,'2026-07-22');
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `cart_items`
+--
+
+DROP TABLE IF EXISTS `cart_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cart_items` (
+  `cart_item_id` int NOT NULL AUTO_INCREMENT,
+  `cart_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `quantity` int DEFAULT NULL,
+  PRIMARY KEY (`cart_item_id`),
+  UNIQUE KEY `cart_id` (`cart_id`,`product_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
+  CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
+  CONSTRAINT `cart_items_chk_1` CHECK ((`quantity` > 0))
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cart_items`
@@ -36,6 +74,22 @@ INSERT INTO `cart_items` VALUES (1,1,1,1),(2,1,4,2),(3,2,5,3),(4,2,8,1),(5,3,2,1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `categories` (
+  `category_id` int NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`category_id`),
+  UNIQUE KEY `category_name` (`category_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `categories`
 --
 
@@ -44,6 +98,28 @@ LOCK TABLES `categories` WRITE;
 INSERT INTO `categories` VALUES (1,'Electronics','Electronic gadgets and devices'),(2,'Fashion','Clothing and fashion accessories'),(3,'Books','Educational and story books'),(4,'Home Appliances','Appliances for home use'),(5,'Sports','Sports equipment and accessories');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customers` (
+  `customer_id` int NOT NULL AUTO_INCREMENT,
+  `customer_name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  `created_at` date DEFAULT (curdate()),
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `phone` (`phone`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `customers`
@@ -56,6 +132,29 @@ INSERT INTO `customers` VALUES (1,'Rahul Sharma','rahul@gmail.com','9876543210',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `delivery`
+--
+
+DROP TABLE IF EXISTS `delivery`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `delivery` (
+  `delivery_id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `delivery_address` varchar(255) NOT NULL,
+  `tracking_number` varchar(100) DEFAULT NULL,
+  `delivery_partner` varchar(100) DEFAULT NULL,
+  `expected_delivery_date` date DEFAULT NULL,
+  `actual_delivery_date` date DEFAULT NULL,
+  `delivery_status` varchar(30) DEFAULT 'Processing',
+  PRIMARY KEY (`delivery_id`),
+  UNIQUE KEY `order_id` (`order_id`),
+  UNIQUE KEY `tracking_number` (`tracking_number`),
+  CONSTRAINT `delivery_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `delivery`
 --
 
@@ -64,6 +163,29 @@ LOCK TABLES `delivery` WRITE;
 INSERT INTO `delivery` VALUES (1,1,'Madhapur, Hyderabad','TRK10001','BlueDart','2026-07-05','2026-07-04','Delivered'),(2,2,'Beach Road, Visakhapatnam','TRK10002','Delhivery','2026-07-08',NULL,'Processing'),(3,3,'Whitefield, Bangalore','TRK10003','BlueDart','2026-07-07','2026-07-06','Delivered'),(4,4,'T Nagar, Chennai','TRK10004','DTDC','2026-07-10',NULL,'Shipped'),(5,5,'Andheri, Mumbai','TRK10005','Delhivery','2026-07-11',NULL,'Processing'),(6,6,'Rohini, Delhi','TRK10006','Ecom Express','2026-07-12',NULL,'Processing'),(7,7,'Benz Circle, Vijayawada','TRK10007','BlueDart','2026-07-11','2026-07-10','Delivered'),(8,8,'Salt Lake, Kolkata','TRK10008','DTDC','2026-07-12','2026-07-11','Delivered'),(9,9,'Hinjewadi, Pune','TRK10009','Delhivery','2026-07-15',NULL,'Processing'),(10,10,'Malviya Nagar, Jaipur','TRK10010','BlueDart','2026-07-14','2026-07-13','Delivered');
 /*!40000 ALTER TABLE `delivery` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `order_items`
+--
+
+DROP TABLE IF EXISTS `order_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_items` (
+  `order_item_id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `quantity` int DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`order_item_id`),
+  KEY `order_id` (`order_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
+  CONSTRAINT `order_items_chk_1` CHECK ((`quantity` > 0)),
+  CONSTRAINT `order_items_chk_2` CHECK ((`price` > 0))
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `order_items`
@@ -76,6 +198,26 @@ INSERT INTO `order_items` VALUES (1,1,1,1,75000.00),(2,1,4,2,2500.00),(3,2,5,3,1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `order_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `order_date` date DEFAULT (curdate()),
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `status` varchar(30) DEFAULT 'Confirmed',
+  PRIMARY KEY (`order_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+  CONSTRAINT `orders_chk_1` CHECK ((`total_amount` >= 0))
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `orders`
 --
 
@@ -86,6 +228,26 @@ INSERT INTO `orders` VALUES (1,1,'2026-07-01',80000.00,'Delivered'),(2,2,'2026-0
 UNLOCK TABLES;
 
 --
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments` (
+  `payment_id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `payment_date` date DEFAULT (curdate()),
+  `payment_mode` varchar(30) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `payment_status` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`payment_id`),
+  UNIQUE KEY `order_id` (`order_id`),
+  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `payments`
 --
 
@@ -94,6 +256,28 @@ LOCK TABLES `payments` WRITE;
 INSERT INTO `payments` VALUES (1,1,'2026-07-01','UPI',80000.00,'Paid'),(2,2,'2026-07-02','Cash on Delivery',4450.00,'Pending'),(3,3,'2026-07-03','Credit Card',96800.00,'Paid'),(4,4,'2026-07-04','Debit Card',65000.00,'Paid'),(5,5,'2026-07-05','UPI',3600.00,'Paid'),(6,6,'2026-07-06','Net Banking',1950.00,'Pending'),(7,7,'2026-07-07','UPI',700.00,'Paid'),(8,8,'2026-07-08','Credit Card',35000.00,'Paid'),(9,9,'2026-07-09','Cash on Delivery',7000.00,'Pending'),(10,10,'2026-07-10','Debit Card',4500.00,'Paid');
 /*!40000 ALTER TABLE `payments` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `products` (
+  `product_id` int NOT NULL AUTO_INCREMENT,
+  `category_id` int NOT NULL,
+  `product_name` varchar(150) NOT NULL,
+  `brand` varchar(100) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `stock` int DEFAULT NULL,
+  PRIMARY KEY (`product_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`),
+  CONSTRAINT `products_chk_1` CHECK ((`price` > 0)),
+  CONSTRAINT `products_chk_2` CHECK ((`stock` >= 0))
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `products`
@@ -114,4 +298,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-08-04 22:09:49
+-- Dump completed on 2026-08-04 22:09:11
