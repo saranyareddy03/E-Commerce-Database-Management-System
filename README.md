@@ -136,7 +136,7 @@ The following query identifies the product with the highest number of sales.
 
 ![Best Selling Product](screenshots/best_selling_product.png)
 
-## Author
+## Co-Author
 
 **Nallimilli Saranya Reddy**
 
