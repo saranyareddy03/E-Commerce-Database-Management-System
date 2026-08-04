@@ -51,7 +51,7 @@ This project demonstrates database design, normalization, relationship modeling,
 
 The following ER Diagram illustrates the relationships between all tables in the database.
 
-![ER Diagram](er diagram.png)
+![ER Diagram](ER_Diagram.png)
 
 ---
 
